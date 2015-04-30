@@ -6,6 +6,8 @@ import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.apache.commons.dbutils.DbUtils;
+
 import com.ndobriukha.onlinemarketplace.dao.DaoFactory;
 import com.ndobriukha.onlinemarketplace.dao.GenericDao;
 import com.ndobriukha.onlinemarketplace.dao.PersistException;
@@ -23,12 +25,8 @@ public class OracleDaoFactory implements DaoFactory<Connection> {
 		this.url = url;
 		this.user = user;
 		this.password = password;
-		
-		try {
-            Class.forName(driver);//Регистрируем драйвер
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();
-        }
+
+		DbUtils.loadDriver(driver);
 		
 		creators = new HashMap<Class, DaoCreator>();
         creators.put(User.class, new DaoCreator<Connection>() {

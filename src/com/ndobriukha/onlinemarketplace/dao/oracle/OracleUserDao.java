@@ -18,22 +18,22 @@ public class OracleUserDao extends AbstractJdbcDao<User, Integer> {
 	
 	@Override
 	public String getSelectQuery() {
-		return "SELECT USER_ID, FULL_NAME, BILLING_ADDRESS, LOGIN, PASSWORD, EMAIL FROM Users";
+		return "SELECT id, fullName, billingAddress, login, password, email FROM Users";
 	}
 
 	@Override
 	public String getCreateQuery() {
-		return "INSERT INTO USERS (FULL_NAME, BILLING_ADDRESS, LOGIN, PASSWORD, EMAIL) VALUES(?, ?, ?, ?, ?)";
+		return "INSERT INTO USERS (fullName, billingAddress, login, password, email) VALUES(?, ?, ?, ?, ?)";
 	}
 
 	@Override
 	public String getUpdateQuery() {
-		return "UPDATE Users SET FULL_NAME = ?, BILLING_ADDRESS = ?, LOGIN = ?, PASSWORD = ?, EMAIL = ? WHERE USER_ID = ?";
+		return "UPDATE Users SET fullName = ?, billingAddress = ?, login = ?, password = ?, email = ? WHERE id = ?";
 	}
 
 	@Override
 	public String getDeleteQuery() {
-		return "DELETE FROM Users WHERE USER_ID = ?";
+		return "DELETE FROM Users WHERE id = ?";
 	}
 	
 
@@ -42,7 +42,7 @@ public class OracleUserDao extends AbstractJdbcDao<User, Integer> {
 		LinkedList<User> result = new LinkedList<User>();
 		try {
 			while (rs.next()) {
-				User user = new User(rs.getInt("USER_ID"));
+				User user = new User(rs.getInt("id"));
 				result.add(user);
 			}
 		} catch(Exception e) {

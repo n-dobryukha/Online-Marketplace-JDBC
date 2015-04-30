@@ -28,7 +28,10 @@ public class OracleDaoTest extends GenericDaoTest<Connection> {
 
 	@Parameterized.Parameters
 	public static Collection getParameters() {
-		return Arrays.asList(new Object[][] { { User.class, new User("Full Name", "Address", "Login", "Password", "email@example.com") } });
+		return Arrays.asList(new Object[][] { {
+				User.class,
+				new User("Full Name", "Address", "Login", "Password",
+						"email@example.com") } });
 	}
 
 	@Before

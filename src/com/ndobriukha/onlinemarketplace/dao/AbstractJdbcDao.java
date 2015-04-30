@@ -3,7 +3,14 @@ package com.ndobriukha.onlinemarketplace.dao;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.Statement;
 import java.util.List;
+
+import org.apache.commons.dbutils.QueryRunner;
+import org.apache.commons.dbutils.handlers.BeanHandler;
+import org.apache.commons.dbutils.handlers.BeanListHandler;
+
+import com.ndobriukha.onlinemarketplace.models.User;
 
 public abstract class AbstractJdbcDao<T extends Identified<PK>, PK extends Integer> implements GenericDao<T, PK> {
 
@@ -43,7 +50,7 @@ public abstract class AbstractJdbcDao<T extends Identified<PK>, PK extends Integ
 	    T persistInstance;
 	    // ƒобавл€ем запись
 	    String sql = getCreateQuery();
-	    try (PreparedStatement statement = connection.prepareStatement(sql)) {
+	    /*try (PreparedStatement statement = connection.prepareStatement(sql)) {
 	        prepareStatementForInsert(statement, object);
 	        int count = statement.executeUpdate();
 	        if (count != 1) {
@@ -51,19 +58,36 @@ public abstract class AbstractJdbcDao<T extends Identified<PK>, PK extends Integ
 	        }
 	    } catch (Exception e) {
 	        throw new PersistException(e);
-	    }
-	    // ѕолучаем только что вставленную запись
-	    sql = getSelectQuery() + "WHERE id = last_insert_id();";
-	    try (PreparedStatement statement = connection.prepareStatement(sql)) {
-	        ResultSet rs = statement.executeQuery();
-	        List<T> list = parseResultSet(rs);
-	        if ((list == null) || (list.size() != 1)) {
-	            throw new PersistException("Exception on findByPK new persist data.");
-	        }
-	        persistInstance = list.iterator().next();
+	    }*/
+	    QueryRunner query = new QueryRunner();	    	
+	    try {
+	    	//persistInstance = (T) query.insert(connection, sql, new BeanHandler((Class<T>) object.getClass()));
+	    	
+	    	PreparedStatement stmt = connection.prepareStatement("insert into Users (fullName, billingAddress) values(?, ?)", Statement.RETURN_GENERATED_KEYS);
+	    	
+	    	User user = (User) query.insert(connection, "insert into Users (fullName) values(?)", new BeanHandler<User>(User.class), "AAA", "BBB");
+	    	
+	    	//int num = query.update(connection, sql, "A", "B", "C", "D", "E");
+	    	//System.out.println(num);
+	    	
 	    } catch (Exception e) {
 	        throw new PersistException(e);
 	    }
+	    
+	    
+	    // ѕолучаем только что вставленную запись
+	    sql = getSelectQuery() + " WHERE id = GET_CURRENT_SEQ_VAL_USERS()";
+	    
+	    try {
+	    	List<T> list = (List<T>) query.query(connection, sql, new BeanListHandler((Class<T>) object.getClass()));
+	    	if ((list == null) || (list.size() != 1)) {
+	            throw new PersistException("Exception on findByPK new persist data.");
+	        }
+	    	persistInstance = list.iterator().next();
+	    } catch (Exception e) {
+	        throw new PersistException(e);
+	    }
+	    
 	    return persistInstance;
 	}
 	
@@ -103,19 +127,23 @@ public abstract class AbstractJdbcDao<T extends Identified<PK>, PK extends Integ
 	}
 
 	@Override
-	public void delete(T object) throws PersistException {
-	    String sql = getDeleteQuery();
-	    try (PreparedStatement statement = connection.prepareStatement(sql)) {
-	        prepareStatementForDelete(statement, object); // заполнение аргументов запроса оставим на совесть потомков
-	        int count = statement.executeUpdate();
-	        if (count != 1) {
-	            throw new PersistException("On delete modify more then 1 record: " + count);
-	        }
-	        statement.close();
-	    } catch (Exception e) {
-	        throw new PersistException(e);
-	    }
-	}
+	 public void delete(T object) throws PersistException {
+        String sql = getDeleteQuery();
+        try (PreparedStatement statement = connection.prepareStatement(sql)) {
+            try {
+                statement.setObject(1, object.getId());
+            } catch (Exception e) {
+                throw new PersistException(e);
+            }
+            int count = statement.executeUpdate();
+            if (count != 1) {
+                throw new PersistException("On delete modify more then 1 record: " + count);
+            }
+            statement.close();
+        } catch (Exception e) {
+            throw new PersistException(e);
+        }
+    }
 
     @Override
     public List<T> getAll() throws PersistException {

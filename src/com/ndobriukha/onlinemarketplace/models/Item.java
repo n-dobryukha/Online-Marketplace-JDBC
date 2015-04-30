@@ -2,10 +2,12 @@ package com.ndobriukha.onlinemarketplace.models;
 
 import java.util.Date;
 
-public class Item {
+import com.ndobriukha.onlinemarketplace.dao.Identified;
+
+public class Item implements Identified<Integer> {
 
 	private Integer id = null;
-	private User seller;
+	private int sellerId;
 	private String description;
 	private double startPrice;
 	private int timeLeft;
@@ -14,15 +16,15 @@ public class Item {
 	private double bidIncrement;
 
 	public Item() {
-		// TODO Auto-generated constructor stub
 	}
 
-	public int getId() {
+	@Override
+	public Integer getId() {
 		return id;
 	}
 
-	public User getSeller() {
-		return seller;
+	public int getSeller() {
+		return sellerId;
 	}
 
 	public String getDescription() {
@@ -48,6 +50,5 @@ public class Item {
 	public double getBidIncrement() {
 		return bidIncrement;
 	}
-	
-	
+
 }

@@ -1,26 +1,29 @@
 package com.ndobriukha.onlinemarketplace.models;
 
-public class Bid {
+import com.ndobriukha.onlinemarketplace.dao.Identified;
+
+public class Bid implements Identified<Integer> {
 
 	private Integer id = null;
-	private Item item;
-	private User bidder;
+	private int bidderId;
+	private int itemId;	
 	private double amount;
 	
 	public Bid() {
 		// TODO Auto-generated constructor stub
 	}
 
-	public int getId() {
+	@Override
+	public Integer getId() {
 		return id;
 	}
 
-	public Item getItem() {
-		return item;
+	public int getItemId() {
+		return itemId;
 	}
 
-	public User getBidder() {
-		return bidder;
+	public int getBidderId() {
+		return bidderId;
 	}
 
 	public double getAmount() {
