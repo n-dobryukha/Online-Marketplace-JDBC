@@ -1,6 +1,8 @@
 package com.ndobriukha.onlinemarketplace.dao;
 
-public class PersistException extends Exception {
+import java.sql.SQLException;
+
+public class PersistException extends SQLException {
 
 	public PersistException() { }
 	

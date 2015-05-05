@@ -3,29 +3,6 @@ package com.ndobriukha.onlinemarketplace.models;
 import com.ndobriukha.onlinemarketplace.dao.Identified;
 
 public class User implements Base, Identified<Integer> {
-	public void setId(Integer id) {
-		this.id = id;
-	}
-
-	public void setFullName(String fullName) {
-		this.fullName = fullName;
-	}
-
-	public void setBillingAddress(String billingAddress) {
-		this.billingAddress = billingAddress;
-	}
-
-	public void setLogin(String login) {
-		this.login = login;
-	}
-
-	public void setPassword(String password) {
-		this.password = password;
-	}
-
-	public void setEmail(String email) {
-		this.email = email;
-	}
 
 	private Integer id = null;
 	private String fullName;
@@ -37,10 +14,6 @@ public class User implements Base, Identified<Integer> {
 	public User() {
 	}
 
-	public User(int id) {
-		this.id = id;
-	}
-	
 	public User(String fullName, String billingAddress, String login,
 			String password, String email) {
 		this.fullName = fullName;
@@ -55,6 +28,10 @@ public class User implements Base, Identified<Integer> {
 		return id;
 	}
 
+	public void setId(Integer id) {
+		this.id = id;
+	}
+
 	protected void setId(int id) {
 		this.id = id;
 	}
@@ -63,25 +40,46 @@ public class User implements Base, Identified<Integer> {
 		return fullName;
 	}
 
+	public void setFullName(String fullName) {
+		this.fullName = fullName;
+	}
+
 	public String getBillingAddress() {
 		return billingAddress;
+	}
+
+	public void setBillingAddress(String billingAddress) {
+		this.billingAddress = billingAddress;
 	}
 
 	public String getLogin() {
 		return login;
 	}
 
+	public void setLogin(String login) {
+		this.login = login;
+	}
+
 	public String getPassword() {
 		return password;
+	}
+
+	public void setPassword(String password) {
+		this.password = password;
 	}
 
 	public String getEmail() {
 		return email;
 	}
-	
+
+	public void setEmail(String email) {
+		this.email = email;
+	}
+
 	@Override
 	public String[] getFieldsValues() {
-		return new String[] { getFullName(), getBillingAddress(), getLogin(), getPassword(), getEmail() };
+		return new String[] { getFullName(), getBillingAddress(), getLogin(),
+				getPassword(), getEmail() };
 	}
 
 	@Override
@@ -138,9 +136,8 @@ public class User implements Base, Identified<Integer> {
 			if (other.email != null)
 				return false;
 		} else if (!email.equals(other.email))
-			return false;		
+			return false;
 		return true;
 	}
-	
-	
+
 }

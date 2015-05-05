@@ -4,6 +4,7 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
 
 import org.apache.commons.dbutils.DbUtils;
@@ -26,6 +27,7 @@ public class OracleDaoFactory implements DaoFactory<Connection> {
 		this.user = user;
 		this.password = password;
 
+		Locale.setDefault(Locale.ENGLISH);
 		DbUtils.loadDriver(driver);
 		
 		creators = new HashMap<Class, DaoCreator>();

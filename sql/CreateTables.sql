@@ -22,7 +22,7 @@ CREATE TABLE Items (
 	description VARCHAR2 (200),
 	startPrice NUMBER(*,2),
 	timeLeft NUMBER(*,0),
-	startBiddingTS TIMESTAMP (6),
+	startBidding TIMESTAMP (6),
 	buyItNow CHAR(1),
 	bidIncrement NUMBER
 	);
