@@ -24,7 +24,8 @@ CREATE TABLE Items (
 	timeLeft NUMBER(*,0),
 	startBidding TIMESTAMP (6),
 	buyItNow CHAR(1),
-	bidIncrement NUMBER
+	bidIncrement NUMBER,
+	sold CHAR(1)
 	);
    
 	CREATE UNIQUE INDEX Items_PK ON Items(id);
@@ -36,6 +37,9 @@ CREATE TABLE Items (
 		ADD CONSTRAINT Items_buyItNow_CHK CHECK (buyItNow in ('N','Y')) ENABLE;
 		
 	ALTER TABLE Items
+		ADD CONSTRAINT Items_sold_CHK CHECK (sold in ('N','Y')) ENABLE;
+		
+	ALTER TABLE Items
 		ADD CONSTRAINT Items_FK FOREIGN KEY (sellerId)
 		REFERENCES Users(id) ENABLE;
 
@@ -44,14 +48,14 @@ CREATE TABLE Bids (
 	id INTEGER NOT NULL,
 	bidderId INTEGER NOT NULL,
 	itemId INTEGER NOT NULL,
-	bid NUMBER(*,2)
+	amount NUMBER(*,2)
 	);
    
 	CREATE UNIQUE INDEX Bids_PK ON Bids(id);
    
-	CREATE UNIQUE INDEX Bids_Bidder_IDX ON Bids(bidderId);
+	CREATE INDEX Bids_Bidder_IDX ON Bids(bidderId);
    
-	CREATE UNIQUE INDEX Bids_Item_IDX ON Bids(itemId);
+	CREATE INDEX Bids_Item_IDX ON Bids(itemId);
    
 	ALTER TABLE Bids
 		ADD CONSTRAINT Bids_PK Primary Key(id);

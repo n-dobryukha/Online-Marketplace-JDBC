@@ -2,7 +2,7 @@ package com.ndobriukha.onlinemarketplace.models;
 
 import com.ndobriukha.onlinemarketplace.dao.Identified;
 
-public class User implements Base, Identified<Integer> {
+public class User implements RetrieveFieldsValues, Identified<Integer> {
 
 	private Integer id = null;
 	private String fullName;

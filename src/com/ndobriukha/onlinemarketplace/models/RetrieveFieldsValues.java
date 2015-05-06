@@ -1,5 +1,5 @@
 package com.ndobriukha.onlinemarketplace.models;
 
-public interface Base {
+public interface RetrieveFieldsValues {
 	public Object[] getFieldsValues();
 }

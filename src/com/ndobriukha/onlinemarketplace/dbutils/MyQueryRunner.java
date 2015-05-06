@@ -1,4 +1,4 @@
-package com.ndobriukha.onlinemarketplace.dao;
+package com.ndobriukha.onlinemarketplace.dbutils;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;

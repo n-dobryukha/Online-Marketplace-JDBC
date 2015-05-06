@@ -8,7 +8,7 @@ import java.util.List;
 import org.apache.commons.dbutils.BasicRowProcessor;
 
 import com.ndobriukha.onlinemarketplace.models.Item;
-import com.ndobriukha.onlinemarketplace.models.User;
+import com.ndobriukha.onlinemarketplace.models.Item.BooleanType;
 
 public class ItemRowProcessor extends BasicRowProcessor {
 
@@ -20,9 +20,10 @@ public class ItemRowProcessor extends BasicRowProcessor {
 		item.setDescription(rs.getString(3));
 		item.setStartPrice(rs.getDouble(4));
 		item.setTimeLeft(rs.getInt(5));
-		item.setStartBidding(rs.getDate(6));
-		item.setBuyItNow(rs.getString(7));
+		item.setStartBidding((rs.getTimestamp(6)));
+		item.setBuyItNow(BooleanType.valueOf(rs.getString(7)));
 		item.setBidIncrement(rs.getDouble(8));
+		item.setSold(BooleanType.valueOf(rs.getString(9)));
 		return (T) item;
 	}
 

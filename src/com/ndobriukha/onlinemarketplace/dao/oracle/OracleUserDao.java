@@ -1,26 +1,21 @@
 package com.ndobriukha.onlinemarketplace.dao.oracle;
 
 import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.LinkedList;
 import java.util.List;
 
 import org.apache.commons.dbutils.QueryRunner;
-import org.apache.commons.dbutils.handlers.BeanHandler;
 import org.apache.commons.dbutils.handlers.BeanListHandler;
 
 import com.ndobriukha.onlinemarketplace.dao.AbstractJdbcDao;
 import com.ndobriukha.onlinemarketplace.dao.PersistException;
 import com.ndobriukha.onlinemarketplace.dao.PersistExistsException;
-import com.ndobriukha.onlinemarketplace.dbutils.UserRowProcessor;
 import com.ndobriukha.onlinemarketplace.models.User;
 
 public class OracleUserDao extends AbstractJdbcDao<User, Integer> {
 
 	public OracleUserDao(Connection connection) {
-		super(connection);
+		super(connection, User.class);
 	}
 
 	@Override
@@ -51,7 +46,7 @@ public class OracleUserDao extends AbstractJdbcDao<User, Integer> {
 
 	public User create(String fullName, String billingAddress, String login, String password, String email) throws PersistException {
 		User user = new User(fullName, billingAddress, login, password, email);
-		return persist(user, new UserRowProcessor());
+		return persist(user);
 	}
 
 	public User getUserByLogin(String login) throws PersistExistsException, PersistException {

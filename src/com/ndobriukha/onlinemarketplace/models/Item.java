@@ -1,12 +1,13 @@
 package com.ndobriukha.onlinemarketplace.models;
 
+import java.sql.Timestamp;
 import java.util.Date;
 
 import com.ndobriukha.onlinemarketplace.dao.Identified;
 
-public class Item implements Base, Identified<Integer> {
+public class Item implements RetrieveFieldsValues, Identified<Integer> {
 
-	public static enum BuyItNowType {
+	public static enum BooleanType {
 		Y, N;
 	}
 	
@@ -15,23 +16,26 @@ public class Item implements Base, Identified<Integer> {
 	private String description;
 	private double startPrice;
 	private int timeLeft;
-	private Date startBidding;
-	private BuyItNowType buyItNow;
+	private Timestamp startBidding;
+	private BooleanType buyItNow;
 	private double bidIncrement;
+	private BooleanType sold;
 
 	public Item() {
+		this.sold = BooleanType.N;
 	}
 
 	public Item(int sellerId, String description, double startPrice,
-			int timeLeft, Date startBidding, BuyItNowType buyItNow,
+			int timeLeft, Timestamp startBidding, BooleanType buyItNow,
 			double bidIncrement) {
+		this();
 		this.sellerId = sellerId;
 		this.description = description;
 		this.startPrice = startPrice;
 		this.timeLeft = timeLeft;
 		this.startBidding = startBidding;
 		this.buyItNow = buyItNow;
-		this.bidIncrement = bidIncrement;
+		this.bidIncrement = bidIncrement;		
 	}
 
 	public Integer getId() {
@@ -78,20 +82,20 @@ public class Item implements Base, Identified<Integer> {
 		return startBidding;
 	}
 
-	public void setStartBidding(Date startBidding) {
+	public void setStartBidding(Timestamp startBidding) {
 		this.startBidding = startBidding;
 	}
 
 	public boolean isBuyItNow() {
-		return (buyItNow == BuyItNowType.Y);
+		return (buyItNow == BooleanType.Y);
 	}
 	
-	public BuyItNowType getBuyItNow() {
+	public BooleanType getBuyItNow() {
 		return buyItNow;
 	}
 
-	public void setBuyItNow(String buyItNow) {
-		this.buyItNow = BuyItNowType.valueOf(buyItNow);
+	public void setBuyItNow(BooleanType buyItNow) {
+		this.buyItNow = buyItNow;
 	}
 
 	public double getBidIncrement() {
@@ -102,12 +106,23 @@ public class Item implements Base, Identified<Integer> {
 		this.bidIncrement = bidIncrement;
 	}
 
+	public BooleanType getSold() {
+		return sold;
+	}
+
+	public void setSold(BooleanType sold) {
+		this.sold = sold;
+	}
+	
+	public void sale() {
+		setSold(BooleanType.Y);
+	}
+
 	@Override
 	public Object[] getFieldsValues() {
-		/*return new Object[] { getSellerId(), getDescription(), getStartPrice(),
-				getTimeLeft(), getStartBidding(), isBuyItNow(),
-				getBidIncrement() };*/
-		return new Object[] { getSellerId(), getDescription(), getStartPrice(), getTimeLeft(), "Y" };
+		return new Object[] { getSellerId(), getDescription(), getStartPrice(),
+				getTimeLeft(), getStartBidding(), getBuyItNow().toString(),
+				getBidIncrement(), getSold().toString() };
 	}
 
 	@Override
@@ -117,11 +132,14 @@ public class Item implements Base, Identified<Integer> {
 		long temp;
 		temp = Double.doubleToLongBits(bidIncrement);
 		result = prime * result + (int) (temp ^ (temp >>> 32));
-		result = prime * result + ((buyItNow == BuyItNowType.Y) ? 1231 : 1237);
+		result = prime * result
+				+ ((buyItNow == null) ? 0 : buyItNow.hashCode());
 		result = prime * result
 				+ ((description == null) ? 0 : description.hashCode());
 		result = prime * result + ((id == null) ? 0 : id.hashCode());
-		result = prime * result + sellerId;
+		result = prime * result
+				+ ((sellerId == null) ? 0 : sellerId.hashCode());
+		result = prime * result + ((sold == null) ? 0 : sold.hashCode());
 		result = prime * result
 				+ ((startBidding == null) ? 0 : startBidding.hashCode());
 		temp = Double.doubleToLongBits(startPrice);
@@ -154,7 +172,12 @@ public class Item implements Base, Identified<Integer> {
 				return false;
 		} else if (!id.equals(other.id))
 			return false;
-		if (sellerId != other.sellerId)
+		if (sellerId == null) {
+			if (other.sellerId != null)
+				return false;
+		} else if (!sellerId.equals(other.sellerId))
+			return false;
+		if (sold != other.sold)
 			return false;
 		if (startBidding == null) {
 			if (other.startBidding != null)
@@ -168,4 +191,5 @@ public class Item implements Base, Identified<Integer> {
 			return false;
 		return true;
 	}
+
 }

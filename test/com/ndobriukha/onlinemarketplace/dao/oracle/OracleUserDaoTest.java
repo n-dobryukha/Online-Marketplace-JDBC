@@ -14,7 +14,6 @@ import com.ndobriukha.onlinemarketplace.dao.DaoFactory;
 import com.ndobriukha.onlinemarketplace.dao.PersistConstraintException;
 import com.ndobriukha.onlinemarketplace.dao.PersistException;
 import com.ndobriukha.onlinemarketplace.dao.PersistExistsException;
-import com.ndobriukha.onlinemarketplace.dbutils.UserRowProcessor;
 import com.ndobriukha.onlinemarketplace.models.User;
 
 public class OracleUserDaoTest {
@@ -41,6 +40,8 @@ public class OracleUserDaoTest {
 	}
 
 	/**
+	 * 1.	Получение всех пользователей.
+	 * 
 	 * Step to reproduce: С помощью sql-скриптов создать в базе несколько
 	 * пользователей. Вызвать метод для получения всех существующих
 	 * пользователей.
@@ -61,7 +62,7 @@ public class OracleUserDaoTest {
 			QueryRunner query = new QueryRunner();
 			int[] rows = query.batch(connection, sql, params);
 			Assert.assertEquals(params.length, rows.length);
-			List<User> users = oraUserDao.getAll(User.class, new UserRowProcessor());
+			List<User> users = oraUserDao.getAll();
 			Assert.assertEquals(rows.length, users.size());
 			for (int i = 0; i < users.size(); i++) {
 				User user = users.get(i);
@@ -74,6 +75,8 @@ public class OracleUserDaoTest {
 	}
 
 	/**
+	 * 2.	Создание нового пользователя.
+	 * 
 	 * Step to reproduce: Вызвать метод для создания пользователя с определённым
 	 * логином и паролем. Вызвать метод для получения всех существующих
 	 * пользователей.
@@ -92,7 +95,7 @@ public class OracleUserDaoTest {
 			Assert.assertNotNull("Persist object is null", user);
 			Assert.assertNotNull("After persist object ID is null",
 					user.getId());
-			List<User> users = oraUserDao.getAll(User.class, new UserRowProcessor());
+			List<User> users = oraUserDao.getAll();
 			Assert.assertEquals("More than one created User.", 1, users.size());
 			Assert.assertEquals(user, users.get(0));
 		} catch (PersistException e) {
@@ -102,6 +105,8 @@ public class OracleUserDaoTest {
 	}
 
 	/**
+	 * 2.1	Создание нового пользователя.
+	 * 
 	 * Step to reproduce: С помощью sql-скрипта создать в базе пользователя с
 	 * логином «login». Вызвать метод для создания пользователя с логином
 	 * «login».
@@ -127,6 +132,8 @@ public class OracleUserDaoTest {
 	}
 
 	/**
+	 * 3.	Получение пользователя по его логину.
+	 * 
 	 * Step to reproduce: С помощью sql-скрипта создать в базе пользователя с
 	 * логином «login». Вызвать метод для получения пользователя с логином
 	 * «login».
@@ -150,6 +157,8 @@ public class OracleUserDaoTest {
 	}
 
 	/**
+	 * 3.1	Получение пользователя по его логину.
+	 * 
 	 * Step to reproduce: Вызвать метод для получения пользователя с
 	 * несуществующим логином.
 	 * 
@@ -166,6 +175,8 @@ public class OracleUserDaoTest {
 	}
 
 	/**
+	 * 4.	Изменение данных пользователя.
+	 * 
 	 * Step to reproduce: С помощью sql-скрипта создать в базе пользователя с
 	 * логином «login». Вызвать метод для получения пользователя с логином
 	 * «login». Изменить все данные пользователя.
@@ -191,8 +202,7 @@ public class OracleUserDaoTest {
 		receivedUser.setPassword("New password");
 		receivedUser.setEmail("New email");
 		oraUserDao.update(receivedUser);
-		User receivedUpdatesUser = oraUserDao.getByPK(receivedUser.getId(),
-				User.class);
+		User receivedUpdatesUser = oraUserDao.getByPK(receivedUser.getId());
 		Assert.assertNotNull("Updates object is null", receivedUpdatesUser);
 		Assert.assertEquals(receivedUser, receivedUpdatesUser);
 	}
